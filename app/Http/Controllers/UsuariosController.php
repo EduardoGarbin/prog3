@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
+
 
 class UsuariosController extends Controller
 {
@@ -24,51 +27,47 @@ class UsuariosController extends Controller
     {
         $usuario = new Usuario();
 
-        $usuario->nome = $form->nome;
+        $usuario->name = $form->nome;
         $usuario->email = $form->email;
-        $usuario->usuario = $form->usuario;
-        $usuario->senha = Hash::make($form->senha);
+        $usuario->username = $form->usuario;
+        $usuario->password = Hash::make($form->senha);
 
         $usuario->save();
 
-        return redirect()->route('usuarios.index');
+
+        event(new Registered($usuario));
+        //return redirect()->route('usuarios.index');
+        $this->login($form);
+        return redirect()->route('verification.notice');
     }
 
     // Ações de login
     public function login(Request $form)
     {
         // Está enviando o formulário
-        if ($form->isMethod('POST'))
-        {
-            $usuario = $form->usuario;
-            $senha = $form->senha;
-
-            $consulta = Usuario::select('id', 'nome', 'email', 'usuario', 'senha')->where('usuario', $usuario)->get();
-
-            // Confere se encontrou algum usuário
-            if ($consulta->count())
-            {
-                // Confere se a senha está correta
-                if (Hash::check($senha, $consulta[0]->senha))
-                {
-                    unset($consulta[0]->senha);
-
-                    session()->put('usuario', $consulta[0]);
-
-                    return redirect()->route('home');
-                }
+        if ($form->isMethod('POST')) {
+            // para a página anterior
+            $credenciais = $form->validate([
+                'username' => ['required'],
+                'password' => ['required'],
+            ]);
+            if (Auth::attempt($credenciais, $form->lembra == "meubau")) {
+                session()->regenerate();
+                return redirect()->route('home');
+            } else {
+                return redirect()->route('login')->with('erro', 'Usuário ou senha inválidos.');
             }
-
-            // Login deu errado (usuário ou senha inválidos)
-            return redirect()->route('login')->with('erro', 'Usuário ou senha inválidos.');
         }
-
         return view('usuarios.login');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->forget('usuario');
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
         return redirect()->route('home');
     }
 }
