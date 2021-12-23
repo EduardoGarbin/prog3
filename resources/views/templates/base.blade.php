@@ -23,7 +23,7 @@
 
         <div class="text-end">
           @if (Auth::user())
-          <a href="{{ route('profile')}}">
+          <a href="{{ route('profile')}}" style="color: white;text-decoration:none;padding: 15px;">
             {{ Auth::user()->name }}!
           </a>
           <a href="{{ route('logout') }}" role="button" class="btn btn-outline-danger">Sair</a>

@@ -24,7 +24,7 @@
         <tr>
             <td>{{$prod->id}}</td>
             <td>
-                <a href="{{ route('produtos.show', $prod) }}">{{$prod->nome}}</a>
+                <a href="{{ route('produtos.show', $prod) }}" style="color: #ffc107; text-decoration:none;">{{$prod->nome}}</a>
             </td>
             <td>R$ {{$prod->preco}}</td>
             <td>

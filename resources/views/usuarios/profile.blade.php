@@ -1,20 +1,31 @@
 @extends('templates.base')
-@section('title', 'Usuários')
-@section('h1', 'Página de Usuários')
+@section('title', 'Inserir Usuário')
+@section('h1', 'Inserir Usuário')
 
 @section('content')
 
 <div class="row">
-    <div> ID: {{ Auth::user()->id }} </div>
-    <div> Usuário: {{ Auth::user()->name }} </div>
-    <div> E-mail: {{ Auth::user()->email }} </div>
+    <table class="table table-hover table-bordered" style="margin: 5px 0px 25px 12px;">
+        <tr>
+            <th> ID </th>
+            <th width="60%"> Nome </th>
+            <th> E-mail </th>
+        </tr>
+        <tbody>
+            <tr>
+                <td> {{ Auth::user()->id }} </td>
+                <td> {{ Auth::user()->name }} </td>
+                <td> {{ Auth::user()->email }} </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-<div class="col-md-4">
-    <a href="{{ route('profile.edit')}}">
-        <button class="btn btn-success"> Alterar dados </button>
+<div class="col">
+    <a href="{{ route('profile.edit')}}" style="margin-right: 10px;">
+        <button class="btn btn-primary"> Alterar dados </button>
     </a>
     <a href="{{ route('profile.password')}}">
-        <button class="btn btn-success"> Alterar senha </button>
+        <button class="btn btn-secondary"> Alterar senha </button>
     </a>
 </div>
 @endsection
