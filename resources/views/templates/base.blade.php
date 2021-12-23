@@ -23,7 +23,9 @@
 
         <div class="text-end">
           @if (Auth::user())
-          Olá, {{ Auth::user()->name }}!
+          <a href="{{ route('profile')}}">
+            {{ Auth::user()->name }}!
+          </a>
           <a href="{{ route('logout') }}" role="button" class="btn btn-outline-danger">Sair</a>
           @else
           <a href="{{ route('login') }}" role="button" class="btn btn-outline-light me-2">Login</a>

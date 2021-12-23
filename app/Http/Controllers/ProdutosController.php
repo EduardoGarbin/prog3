@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ProdutosController extends Controller
 {
-    
+
     public function index()
     {
         $produtos = Produto::orderBy('id', 'desc')->get();
@@ -27,11 +27,13 @@ class ProdutosController extends Controller
 
     public function insert(Request $form)
     {
+        $imagemCaminho = $form->file('imagem')->store('', 'imagens');
         $prod = new Produto();
 
         $prod->nome = $form->nome;
         $prod->preco = $form->preco;
         $prod->descricao = $form->descricao;
+        $prod->imagem = $imagemCaminho;
 
         $prod->save();
 
@@ -65,5 +67,4 @@ class ProdutosController extends Controller
 
         return redirect()->route('produtos');
     }
-
 }

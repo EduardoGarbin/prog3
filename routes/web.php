@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('home', ['pagina' => 'home']);
 })->name('home');
 
-Route::get('produtos', [ProdutosController::class, 'index'])->name('produtos');
+Route::get('produtos', [ProdutosController::class, 'index'])->name('produtos')->middleware(['verified']);
 
 Route::get('/produtos/inserir', [ProdutosController::class, 'create'])->name('produtos.inserir');
 
@@ -58,3 +58,9 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     $request->fulfill();
     return redirect()->route('home');
    })->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::get('/profile', [UsuariosController::class, 'profile'])->name('profile');
+Route::post('/profile/edit', [UsuariosController::class, 'edit'])->name('profile.edit');
+Route::get('/profile/edit', [UsuariosController::class, 'edit'])->name('profile.edit');
+Route::post('/profile/password', [UsuariosController::class, 'password'])->name('profile.password');
+Route::get('/profile/password', [UsuariosController::class, 'password'])->name('profile.password');

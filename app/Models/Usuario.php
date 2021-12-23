@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Usuario extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory;
+    use Notifiable;
 
     public $timestamps = false;
 

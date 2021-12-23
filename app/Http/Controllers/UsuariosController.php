@@ -37,7 +37,8 @@ class UsuariosController extends Controller
 
         event(new Registered($usuario));
         //return redirect()->route('usuarios.index');
-        $this->login($form);
+        //$this->login($form);
+        Auth::login($usuario);
         return redirect()->route('verification.notice');
     }
 
@@ -69,5 +70,44 @@ class UsuariosController extends Controller
 
         $request->session()->regenerateToken();
         return redirect()->route('home');
+    }
+
+    public function profile(Request $form)
+    {
+        return view('usuarios.profile', ['pagina' => 'usuarios']);
+    }
+
+    public function edit(Request $form)
+    {
+        if ($form->isMethod('POST')) {
+            dd($form->nome, $form->email);
+            $usuario = Auth::user();
+            $usuario->name = $form->nome;
+            $usuario->email = $form->email;
+
+            $usuario->save();
+
+            return redirect()->route('profile');
+        }
+        return view('usuarios.edit', ['pagina' => 'usuarios']);
+    }
+
+    public function password(Request $form)
+    {
+        if ($form->isMethod('POST')) {
+            $usuario = Auth::user();
+            if (!Hash::check($form->senha_antiga, $usuario->password)){
+                return "Errou";
+            }
+            if ($form->senha_nova != $form->repetir_senha){
+                return "Errou";
+            }
+            $usuario->password = Hash::make($form->senha_nova);
+
+            $usuario->save();
+
+            return redirect()->route('profile');
+        }
+        return view('usuarios.password', ['pagina' => 'usuarios']);
     }
 }
